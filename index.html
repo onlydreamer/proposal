@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>for xiaosisi</title>
+  <link href="http://immez.github.io/2048/style/main-5.css" rel="stylesheet" type="text/css">
+  <link rel="shortcut icon" href="http://immez.github.io/2048/favicon.ico">
+  <link rel="apple-touch-icon" href="http://immez.github.io/2048/meta/apple-touch-icon.png">
+  <style>.button{color:white;text-decoration:none;padding:10px;margin:auto;background:#8f7a66;border:2px solid #000;}</style>
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+</head>
+<body>
+  <div class="container">
+    <div class="heading">
+      <h1 class="title">for xiaosisi</h1>
+      <p class="game-intro">2048</p>
+    </div>
+    <div class="above-game">
+      <a class="restart-button">重新开始游戏</a>
+      <div class="scores-container">
+        <div class="score-container">0</div>
+        <div class="best-container">0</div>
+      </div>
+    </div>
+    <div class="game-container">
+      <div class="game-message">
+        <p></p>
+        <div class="lower">
+	        <a class="keep-playing-button">继续游戏</a>
+          <a class="retry-button">重新开始</a>
+        </div>
+      </div>
+
+      <div class="grid-container">
+              <div class="grid-row">
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                </div>
+              <div class="grid-row">
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                </div>
+              <div class="grid-row">
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                </div>
+              <div class="grid-row">
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                </div>
+              <div class="grid-row">
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                  <div class="grid-cell"></div>
+                </div>
+            </div>
+
+      <div class="tile-container">
+      </div>
+
+ 
+  <script>
+   var my_list = {2:'http://i2.piimg.com/8b3013208a3254b1.png',4:'http://i2.piimg.com/e56821617ebdc23c.png',8:'http://i2.piimg.com/303e45063da5c891.png',16:'http://i2.piimg.com/b4688bc142d9e815.png',32:'http://i2.piimg.com/68b6064846879835.png',64:'http://i4.piimg.com/bc9a19128c74f24f.png',128:'http://i2.piimg.com/14b3c0bd3e37fb81.png',256:'http://i2.piimg.com/2e5365a09b7a83a6.png',512:'http://i2.piimg.com/c0d5c6150cb2aefd.png',1024:'http://i2.piimg.com/f428671f69a5ba31.png',2048:'http://i2.piimg.com/1052bfbf03bcaaea.png',4096:'http://i2.piimg.com/1052bfbf03bcaaea.png',8192:'http://i2.piimg.com/1052bfbf03bcaaea.png',16384:'http://i2.piimg.com/1052bfbf03bcaaea.png',32768:'http://i2.piimg.com/1052bfbf03bcaaea.png',65536:'http://i2.piimg.com/1052bfbf03bcaaea.png',131072:'65536',262144:'131072',524288:'262144',1048576:'524288',2097152:'1048576',4194304:'2097152',8388608:'4194304',16777216:'8388608',33554432:'16777216',67108864:'33554432',134217728:'67108864',268435456:'134217728',536870912:'268435456',1073741824:'536870912',2147483648:'1073741824'}
+   var my_mark = {2:'Game Over, HiScore: 2',4:'Game Over, HiScore: 4',8:'Game Over, HiScore: 8',16:'Game Over, HiScore: 16',32:'Game Over, HiScore: 32',64:'Game Over, HiScore: 64',128:'Game Over, HiScore: 128',256:'Game Over, HiScore: 256',512:'Game Over, HiScore: 512',1024:'Game Over, HiScore: 1024',2048:'Game Over, HiScore: 2048',4096:'Game Over, HiScore: 4096',8192:'Game Over, HiScore: 8192',16384:'Game Over, HiScore: 16384',32768:'Game Over, HiScore: 32768',65536:'Game Over, HiScore: 65536',131072:'65536',262144:'131072',524288:'262144',1048576:'524288',2097152:'1048576',4194304:'2097152',8388608:'4194304',16777216:'8388608',33554432:'16777216',67108864:'33554432',134217728:'67108864',268435456:'134217728',536870912:'268435456',1073741824:'536870912',2147483648:'1073741824'}
+    var my_goal = 2048;
+    var my_win  = 'You Win!';
+    var easyMode = false;
+    var MyCheckValid = null;
+    $('#easyMode_switcher_A').click(function(){
+      if(!confirm('开启简单模式A后，最大方块值超过32后，新产生的方块值将不小于min(最小方块值, 最大方块值/16)\n即使重新开始游戏也是如此，除非刷新页面\n确认开启？')){return false;}
+      easyMode = true;
+      $(this).text('简单模式A已开启');
+      return false;
+    });
+    $('#easyMode_switcher_B').click(function(){
+      if(!confirm('开启简单模式B后，最大的方块和相邻方块相差倍数不超过4倍就可以合并')){return false;}
+      MyCheckValid = function(next, tile, self){
+        return next && !next.mergedFrom && (
+          Math.max(next.value, tile.value) == self.grid.getMaxScore() ?
+          (Math.max(next.value, tile.value) <= 4*Math.min(next.value, tile.value)) :
+          next.value == tile.value
+          );
+        //return next && !next.mergedFrom && (Math.max(next.value, tile.value) <= 2*Math.min(next.value, tile.value));
+      };
+      $(this).text('简单模式B已开启');
+      return false;
+    });
+  </script>
+  <script src="http://immez.github.io/2048/js/bind_polyfill.js"></script>
+  <script src="http://immez.github.io/2048/js/classlist_polyfill.js"></script>
+  <script src="http://immez.github.io/2048/js/animframe_polyfill.js"></script>
+  <script src="http://immez.github.io/2048/js/keyboard_input_manager.js"></script>
+  <script src="http://immez.github.io/2048/js/html_actuator.js"></script>
+  <script src="http://immez.github.io/2048/js/grid.js"></script>
+  <script src="http://immez.github.io/2048/js/tile.js"></script>
+  <script src="http://immez.github.io/2048/js/local_storage_manager.js"></script>
+  <script src="http://immez.github.io/2048/js/game_manager.js"></script>
+  <script>
+    // Wait till the browser is ready to render the game (avoids glitches)
+    window.requestAnimationFrame(function (){
+      var game = new GameManager(5, KeyboardInputManager, HTMLActuator, LocalStorageManager);
+          });
+    var extra = true;
+    $('#extra').click(function(){
+      if(extra){
+        $('.extra').hide();
+        $(this).text('for xiaosisi');
+      }else{
+        $('.extra').show();
+        $(this).text('隐藏提示信息');
+      }
+      extra = !extra;
+      return false;
+    })
+      </script>
+</body>
+</html>
